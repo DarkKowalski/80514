@@ -1,0 +1,9 @@
+/obj
+**/obj_dir
+*.a
+*.o
+*.d
+*.out
+*.log
+/.vscode/**/*
+!/.vscode/c_cpp_properties.json

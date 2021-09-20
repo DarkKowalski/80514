@@ -1,6 +1,8 @@
 module alu(
+    // verilator lint_off UNUSED
     input clk,
     input rst_n,
+    // verilator lint_on UNUSED
 
     input [7:0] a,
     input [7:0] b,
@@ -22,7 +24,7 @@ module alu(
 
     // logical right shift     3'h00
     // right rotate            3'h01
-    // alrithmetic right shift 3'h02
+    // arithmetic right shift 3'h02
     // left shit               3'h03
     // left rotate             3'h04
     input [2:0] shift_method
@@ -32,17 +34,18 @@ reg [8:0] result; // extra 1 bit for the carry bit
 
 always @(*) begin
     case (method)
-        0: result = a + b + cy_i;
-        1: result = a - b - cy_i;
-        2: result = a & b;
-        3: result = a | b;
-        4: result = ~a;
-        5: result = a ^ b;
+        0: result = a + b + { 8'b0, cy_i };
+        1: result = a - b - { 8'b0, cy_i };
+        2: result = { 1'b0, a } & { 1'b0, b };
+        3: result = { 1'b0, a } | { 1'b0, b };
+        4: result = { 1'b0, ~a };
+        5: result = { 1'b0, a ^ b };
         default: result = 9'bx;
     endcase
 end
 
 assign cy_o = result[8];
+assign o = result[7:0];
 
 reg [7:0] shift_result;
 always @(*) begin
@@ -52,7 +55,7 @@ always @(*) begin
         2: shift_result = { a[7], a[7:1] };
         3: shift_result = { a[6:0], 1'b0 };
         4: shift_result = { a[6:0], a[7] };
-    default: shift_result = 8'bx;
+        default: shift_result = 8'bx;
     endcase
 end
 

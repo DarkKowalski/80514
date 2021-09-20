@@ -1,0 +1,22 @@
+name: Verilator
+on:
+  pull_request:
+  push:
+    branches:
+      - master
+jobs:
+  verify:
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v2
+      - name: Install dependencies
+        run: sudo apt-get install build-essential verilator
+      - name: Verify
+        shell: bash
+        run: cd veri && ./verify.sh 2>&1 | tee verilator.log
+      - name: Upload artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: verilator.log
+          path: veri/verilator.log
+          retention-days: 7
